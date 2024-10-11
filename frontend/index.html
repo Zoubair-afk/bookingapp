@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instrument Booking</title>
+    <link rel="stylesheet" href="style.css"> <!-- Ensure you have the correct stylesheet path -->
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script> <!-- Include QR code library -->
+    <script src="script.js" defer></script> <!-- Ensure this is at the end of the head for proper loading -->
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="https://img.icons8.com/ios-filled/50/4caf50/microphone.png" alt="Instrument Logo" class="logo">
+            <h1>Instrument Booking System</h1>
+        </header>
+
+        <!-- QR Code Scanner UI -->
+        <div id="qr-reader" style="width: 300px; height: 300px;"></div>
+        <div id="qr-reader-results"></div>
+
+        <div class="booking-form">
+            <h2>Book an Instrument</h2>
+            <label for="instrumentId">Instrument ID:</label>
+            <input type="text" id="instrumentId" required>
+
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" required>
+
+            <label for="finishTime">Estimated Finish Time:</label>
+            <input type="datetime-local" id="finishTime" required>
+
+            <button id="bookButton">Book Instrument</button>
+        </div>
+        
+        <div class="booking-status">
+            <h2>Current Bookings</h2>
+            <ul id="bookingList"></ul>
+        </div>
+        
+        <h2>Booking History</h2> <!-- Moved Booking History inside the container -->
+        <ul id="bookingHistoryList"></ul> <!-- Moved Booking History List inside the container -->
+    </div>
+</body>
+</html>
