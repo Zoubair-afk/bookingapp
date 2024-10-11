@@ -1,202 +1,99 @@
+/* General container styling */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f4f8; /* Light background */
+    background-color: #f4f4f9;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .container {
-    max-width: 600px;
-    margin: auto;
-    background: #fff;
+    background-color: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin: 20px;
 }
 
-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.logo {
-    width: 50px; /* Adjust logo size */
-    margin-right: 10px;
-}
-
-h1 {
-    color: #4caf50; /* Green color for the title */
-}
-
-h2 {
+h1, h2 {
     color: #333;
-}
-
-.booking-form {
-    background-color: #e8f5e9; /* Light green background */
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
+    text-align: center;
 }
 
 label {
     display: block;
-    margin: 10px 0 5px;
-    color: #555; /* Darker text color for labels */
+    font-weight: bold;
+    margin-top: 10px;
 }
 
-input {
-    width: 100%;
+input[type="text"], input[type="time"] {
+    width: calc(100% - 20px);
     padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 4px; /* Rounded corners */
+    margin: 10px 0;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
 }
 
 button {
-    background-color: #4caf50; /* Green button */
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #5cb85c;
     color: white;
     border: none;
-    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 16px;
     cursor: pointer;
-    border-radius: 4px; /* Rounded corners */
-    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #45a049; /* Darker green on hover */
+    background-color: #4cae4c;
 }
 
-.booking-status {
-    margin-top: 20px;
-    background-color: #f1f8e9; /* Light yellow background for status */
-    padding: 15px;
-    border-radius: 5px;
+#qr-section {
+    margin-bottom: 20px;
 }
 
-ul {
-    list-style: none;
+#qr-reader {
+    margin: 0 auto;
+    border: 2px dashed #ddd;
+}
+
+#bookingList, #bookingHistoryList {
+    list-style-type: none;
     padding: 0;
 }
 
-li {
-    background: #c8e6c9; /* Light green for list items */
+ul li {
+    background-color: #f9f9f9;
     margin: 5px 0;
     padding: 10px;
-    border-radius: 3px;
-}
-/* Add these styles to your style.css */
-#qr-reader {
-    border: 2px solid #4caf50; /* Green border */
-    border-radius: 8px;
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
-#qr-reader-results {
-    font-weight: bold;
-    margin-top: 10px;
-    color: #4caf50; /* Match the theme color */
-}
-
-.booking-form {
-    border: 1px solid #4caf50;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-}
-
-/* Style the button */
-#bookButton {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-#bookButton:hover {
-    background-color: #45a049;
-}
-/* Base styles for mobile */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0; /* Light background for contrast */
-}
-
-.container {
-    width: 95%; /* Allow some margin on small screens */
-    margin: auto;
-    padding: 10px;
-}
-
-header {
+p {
     text-align: center;
-    padding: 20px;
+    color: #555;
 }
 
-.booking-form,
-.booking-status {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 5px;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Add media queries for larger screens */
-@media (min-width: 600px) {
+@media (max-width: 600px) {
     .container {
-        max-width: 600px; /* Limit width on larger screens */
+        margin: 10px;
+        padding: 15px;
     }
-
-    header {
-        padding: 30px;
+    
+    button {
+        font-size: 14px;
     }
-
-    .booking-form,
-    .booking-status {
-        margin-top: 30px;
-        padding: 20px;
+    
+    input[type="text"], input[type="time"] {
+        font-size: 14px;
     }
-}
-
-@media (min-width: 900px) {
-    .container {
-        max-width: 900px; /* Further limit width on very large screens */
-    }
-
-    header {
-        padding: 40px;
-    }
-
-    .booking-form,
-    .booking-status {
-        margin-top: 40px;
-        padding: 25px;
-    }
-}
-
-/* Button styles */
-#bookButton {
-    width: 100%; /* Make button full-width on mobile */
-    padding: 15px;
-}
-
-/* QR code reader styles */
-#qr-reader {
-    width: 100%; /* Make QR code reader full-width on mobile */
-    height: auto; /* Maintain aspect ratio */
-}
-
-/* Add some padding and margin adjustments for smaller screens */
-h1, h2 {
-    margin: 10px 0;
 }

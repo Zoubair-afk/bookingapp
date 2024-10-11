@@ -4,47 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instrument Booking</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Include HTML5 QR Code library from jsDelivr -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Correct QR code scanner library URL -->
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
     <div class="container">
-        <header>
-            <img src="https://img.icons8.com/ios-filled/50/4caf50/microphone.png" alt="Instrument Logo" class="logo">
-            <h1>Instrument Booking System</h1>
-        </header>
+        <h1>Instrument Booking</h1>
 
-        <!-- QR Code Scanner UI -->
-        <div id="qr-reader" style="width: 300px; height: 300px;"></div>
-        <div id="qr-reader-results"></div>
+        <!-- QR Code Scanner -->
+        <div id="qr-section">
+            <h2>QR Code Scanner</h2>
+            <div id="qr-reader" style="width: 300px; height: 300px;"></div>
+            <p id="qr-reader-results"></p>
+        </div>
 
-        <div class="booking-form">
+        <!-- Booking Form -->
+        <div id="booking-form">
             <h2>Book an Instrument</h2>
             <label for="instrumentId">Instrument ID:</label>
-            <input type="text" id="instrumentId" required>
+            <input type="text" id="instrumentId" placeholder="Scanned Instrument" readonly>
 
             <label for="name">Your Name:</label>
-            <input type="text" id="name" required>
+            <input type="text" id="name" placeholder="Enter your name">
 
-            <label for="finishTime">Estimated Finish Time:</label>
-            <input type="datetime-local" id="finishTime" required>
+            <label for="finishTime">End Time (HH:mm):</label>
+            <input type="time" id="finishTime" placeholder="Enter finish time">
 
             <button id="bookButton">Book Instrument</button>
         </div>
-        
-        <div class="booking-status">
+
+        <!-- Current Bookings -->
+        <div id="current-bookings">
             <h2>Current Bookings</h2>
             <ul id="bookingList"></ul>
         </div>
 
-        <!-- Booking History Section -->
-        <div class="booking-history">
+        <!-- Booking History -->
+        <div id="booking-history">
             <h2>Booking History</h2>
             <ul id="bookingHistoryList"></ul>
         </div>
     </div>
-    
-    <script src="script.js" defer></script>
 </body>
 </html>
