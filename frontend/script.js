@@ -9,11 +9,17 @@ document.getElementById('bookButton').addEventListener('click', function () {
         return;
     }
 
-    const bookingData = { instrumentId, name, finishTime }; // Simplified object creation
+    const bookingData = {
+        instrumentId: instrumentId,
+        name: name,
+        finishTime: finishTime,
+    };
 
     fetch('http://localhost:3001/api/bookings', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify(bookingData),
     })
     .then(response => {
@@ -23,27 +29,30 @@ document.getElementById('bookButton').addEventListener('click', function () {
         return response.json();
     })
     .then(data => {
-        // Notify user and update UI
         alert('Booking successful!');
         addBookingToList(data);
+        addBookingToHistory(data); // Add to history
         clearForm();
-        
-        // Send notification
-        new Notification('Booking Confirmed', {
-            body: `${data.instrumentId} booked until ${new Date(data.finishTime).toLocaleString()}`,
-        });
     })
     .catch(error => {
         alert(error.message);
     });
 });
 
-// Function to add a booking to the list
+// Function to add a booking to the current bookings list
 function addBookingToList(booking) {
     const bookingList = document.getElementById('bookingList');
     const listItem = document.createElement('li');
     listItem.textContent = `${booking.instrumentId} booked by ${booking.name} until ${new Date(booking.finishTime).toLocaleString()}`;
     bookingList.appendChild(listItem);
+}
+
+// Function to add a booking to the history
+function addBookingToHistory(booking) {
+    const bookingHistoryList = document.getElementById('bookingHistoryList');
+    const listItem = document.createElement('li');
+    listItem.textContent = `${booking.instrumentId} booked by ${booking.name} until ${new Date(booking.finishTime).toLocaleString()}`;
+    bookingHistoryList.appendChild(listItem);
 }
 
 // Function to clear the form inputs
@@ -53,18 +62,23 @@ function clearForm() {
     document.getElementById('finishTime').value = '';
 }
 
-// Fetch bookings on page load
+// Fetching the bookings on page load
 window.onload = function () {
     fetchBookings();
 };
 
-// Function to fetch and display bookings
+// Fetch bookings from the server and populate the booking history
 function fetchBookings() {
     fetch('http://localhost:3001/api/bookings')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch bookings');
+            }
+            return response.json();
+        })
         .then(data => {
             const bookingHistoryList = document.getElementById('bookingHistoryList');
-            bookingHistoryList.innerHTML = ''; // Clear the list
+            bookingHistoryList.innerHTML = ''; // Clear the list first
             data.forEach(booking => {
                 const listItem = document.createElement('li');
                 listItem.textContent = `${booking.instrumentId} booked by ${booking.name} until ${new Date(booking.finishTime).toLocaleString()}`;
@@ -74,46 +88,97 @@ function fetchBookings() {
         .catch(error => {
             console.error('Error fetching bookings:', error);
         });
-};
+}
 
 // Request permission for notifications
 if (Notification.permission !== 'denied') {
     Notification.requestPermission();
 }
-// Function to initialize QR code scanning
+
+// Map QR code strings to instrument IDs
+const instrumentQRs = {
+    "Glovebox1": "GB1",
+    // Add more mappings here if needed
+};
+
+// Initialize the QR Code scanner
 function startQRCodeScanner() {
-    const qrReader = new Html5Qrcode("qr-reader");
-    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        // Handle the scanned QR code result
-        document.getElementById('instrumentId').value = decodedText; // Assuming QR code contains instrument ID
-        qrReader.stop().then((ignore) => {
-            console.log("QR Code scanning stopped.");
-        }).catch((err) => {
-            console.error("Failed to stop scanning.", err);
-        });
-    };
+    const html5QrCode = new Html5Qrcode("qr-reader");
 
-    const qrCodeErrorCallback = (errorMessage) => {
-        // Handle scan error if needed
-        console.warn(`QR Code scan error: ${errorMessage}`);
-    };
-
-    // Start scanning with the camera
-    qrReader.start(
-        { facingMode: "environment" }, 
+    // Start the QR code scanning
+    html5QrCode.start(
+        { facingMode: "environment" }, // Use the rear camera
         {
+            // Optional: specify the width and height of the video
             fps: 10,
-            qrbox: 250 // Customize the scanning box size
+            qrbox: { width: 250, height: 250 }
         },
-        qrCodeSuccessCallback,
-        qrCodeErrorCallback)
-    .catch(err => {
-        console.error("Unable to start scanning.", err);
+        (decodedText, decodedResult) => {
+            // Handle the QR code result here
+            document.getElementById("qr-reader-results").innerText = decodedText;
+            
+            const instrumentId = instrumentQRs[decodedText]; // Get the instrument ID from the QR code
+            if (instrumentId) {
+                document.getElementById("instrumentId").value = instrumentId; // Fill the form automatically
+                promptBookingDetails(instrumentId); // Trigger booking
+            } else {
+                alert('Unknown QR code scanned');
+            }
+        },
+        (errorMessage) => {
+            // Handle errors here
+            console.log("QR Code error:", errorMessage);
+        }
+    ).catch(err => {
+        console.log("Failed to start QR scanner:", err);
     });
 }
 
-// Start the QR code scanner when the page loads
+// Prompt user to input booking details
+function promptBookingDetails(instrumentId) {
+    const name = prompt("Enter your name:");
+    const finishTime = prompt("Enter estimated finish time (YYYY-MM-DDTHH:mm):");
+
+    // Validate inputs
+    if (!name || !finishTime) {
+        alert('Please provide both name and finish time.');
+        return;
+    }
+
+    // Proceed with booking
+    const bookingData = {
+        instrumentId: instrumentId,
+        name: name,
+        finishTime: finishTime
+    };
+
+    // Submit the booking
+    fetch('http://localhost:3001/api/bookings', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to book instrument. Please try again.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert('Booking successful!');
+        addBookingToList(data);
+        addBookingToHistory(data);
+        clearForm();
+    })
+    .catch(error => {
+        alert(error.message);
+    });
+}
+
+// Start scanning when the page loads
 window.onload = function () {
-    fetchBookings();
-    startQRCodeScanner(); // Initialize QR code scanner
+    fetchBookings(); // Fetch previous bookings on load
+    startQRCodeScanner(); // Start QR code scanner on load
 };

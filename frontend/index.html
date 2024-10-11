@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instrument Booking</title>
-    <link rel="stylesheet" href="style.css"> <!-- Ensure you have the correct stylesheet path -->
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script> <!-- Include QR code library -->
-    <script src="script.js" defer></script> <!-- Ensure this is at the end of the head for proper loading -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Include HTML5 QR Code library from jsDelivr -->
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
-
 <body>
     <div class="container">
         <header>
@@ -38,9 +37,14 @@
             <h2>Current Bookings</h2>
             <ul id="bookingList"></ul>
         </div>
-        
-        <h2>Booking History</h2> <!-- Moved Booking History inside the container -->
-        <ul id="bookingHistoryList"></ul> <!-- Moved Booking History List inside the container -->
+
+        <!-- Booking History Section -->
+        <div class="booking-history">
+            <h2>Booking History</h2>
+            <ul id="bookingHistoryList"></ul>
+        </div>
     </div>
+    
+    <script src="script.js" defer></script>
 </body>
 </html>
