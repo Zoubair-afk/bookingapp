@@ -103,35 +103,46 @@ const instrumentQRs = {
 
 // Initialize the QR Code scanner
 function startQRCodeScanner() {
-    const html5QrCode = new Html5Qrcode("qr-reader");
+    // Explicitly request camera access before initializing the scanner
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(function (stream) {
+                // Access granted, initialize scanner
+                const html5QrCode = new Html5Qrcode("qr-reader");
 
-    // Start the QR code scanning
-    html5QrCode.start(
-        { facingMode: "environment" }, // Use the rear camera
-        {
-            // Optional: specify the width and height of the video
-            fps: 10,
-            qrbox: { width: 250, height: 250 }
-        },
-        (decodedText, decodedResult) => {
-            // Handle the QR code result here
-            document.getElementById("qr-reader-results").innerText = decodedText;
-            
-            const instrumentId = instrumentQRs[decodedText]; // Get the instrument ID from the QR code
-            if (instrumentId) {
-                document.getElementById("instrumentId").value = instrumentId; // Fill the form automatically
-                promptBookingDetails(instrumentId); // Trigger booking
-            } else {
-                alert('Unknown QR code scanned');
-            }
-        },
-        (errorMessage) => {
-            // Handle errors here
-            console.log("QR Code error:", errorMessage);
-        }
-    ).catch(err => {
-        console.log("Failed to start QR scanner:", err);
-    });
+                html5QrCode.start(
+                    { facingMode: "environment" }, // Use the rear camera
+                    {
+                        fps: 10, // Optional, frames per second
+                        qrbox: { width: 250, height: 250 } // Optional, box size
+                    },
+                    (decodedText, decodedResult) => {
+                        // Handle the QR code result here
+                        document.getElementById("qr-reader-results").innerText = decodedText;
+
+                        const instrumentId = instrumentQRs[decodedText]; // Get the instrument ID from the QR code
+                        if (instrumentId) {
+                            document.getElementById("instrumentId").value = instrumentId; // Fill the form automatically
+                            promptBookingDetails(instrumentId); // Trigger booking
+                        } else {
+                            alert('Unknown QR code scanned');
+                        }
+                    },
+                    (errorMessage) => {
+                        // Handle errors here
+                        console.log("QR Code error:", errorMessage);
+                    }
+                ).catch(err => {
+                    console.log("Failed to start QR scanner:", err);
+                });
+            })
+            .catch(function (err) {
+                console.log("Camera access denied: ", err);
+                alert("Camera access is required to scan the QR code.");
+            });
+    } else {
+        alert("Camera access is not supported on this device.");
+    }
 }
 
 // Prompt user to input booking details
